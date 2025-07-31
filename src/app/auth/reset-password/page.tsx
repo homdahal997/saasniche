@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
@@ -14,22 +15,31 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus(null);
+    toast.dismiss();
     if (password !== confirm) {
+      toast.error("Passwords do not match.");
       setStatus("Passwords do not match.");
       return;
     }
     setLoading(true);
-    const res = await fetch("/api/auth/reset-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, password }),
-    });
-    if (res.ok) {
-      setStatus("Password reset successful. You can now sign in.");
-      setTimeout(() => router.push("/auth/signin"), 2000);
-    } else {
-      const data = await res.json();
-      setStatus(data.error || "Reset failed. Try again.");
+    try {
+      const res = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, password }),
+      });
+      if (res.ok) {
+        toast.success("Password reset successful! Redirecting to sign in...");
+        setStatus("Password reset successful. You can now sign in.");
+        setTimeout(() => router.push("/auth/signin"), 2000);
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Reset failed. Try again.");
+        setStatus(data.error || "Reset failed. Try again.");
+      }
+    } catch (err) {
+      toast.error("Network error. Please try again.");
+      setStatus("Network error. Please try again.");
     }
     setLoading(false);
   };
@@ -61,10 +71,18 @@ export default function ResetPasswordPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Resetting...
+              </span>
+            ) : "Reset Password"}
           </button>
           {status && <div className="text-center text-sm text-gray-600 mt-2">{status}</div>}
         </form>

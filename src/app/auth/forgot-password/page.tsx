@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -10,15 +11,22 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
-    const res = await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    if (res.ok) {
-      setStatus("If an account exists, a reset link has been sent to your email.");
-    } else {
-      setStatus("Something went wrong. Please try again later.");
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        toast.success("If an account exists, a reset link has been sent to your email.");
+        setStatus("If an account exists, a reset link has been sent to your email.");
+      } else {
+        toast.error("Something went wrong. Please try again later.");
+        setStatus("Something went wrong. Please try again later.");
+      }
+    } catch (err) {
+      toast.error("Network error. Please try again later.");
+      setStatus("Network error. Please try again later.");
     }
     setLoading(false);
   };
@@ -40,10 +48,18 @@ export default function ForgotPasswordPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
-            {loading ? "Sending..." : "Send Reset Link"}
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Sending...
+              </span>
+            ) : "Send Reset Link"}
           </button>
           {status && <div className="text-center text-sm text-gray-600 mt-2">{status}</div>}
         </form>

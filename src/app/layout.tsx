@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/navigation";
+import { Toaster } from "react-hot-toast";
+import { Providers } from "./providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,8 +26,11 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
         suppressHydrationWarning={true}
       >
-        <Navigation />
-        {children}
+        <Providers>
+          <Navigation />
+          <Toaster position="top-right" />
+          {children}
+        </Providers>
       </body>
     </html>
   );

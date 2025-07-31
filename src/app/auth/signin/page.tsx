@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import toast from "react-hot-toast";
 import { signIn } from 'next-auth/react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ export default function SignInPage() {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
+    toast.dismiss();
 
     // Basic validation
     const newErrors: any = {};
@@ -27,6 +29,7 @@ export default function SignInPage() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setIsLoading(false);
+      toast.error("Please fill in all required fields.");
       return;
     }
 
@@ -41,11 +44,14 @@ export default function SignInPage() {
       });
       if (result?.error) {
         setErrors({ general: 'Invalid email or password. Please try again.' });
+        toast.error('Invalid email or password. Please try again.');
       } else if (result?.url) {
+        toast.success('Signed in successfully! Redirecting...');
         window.location.href = result.url;
       }
     } catch (error) {
       setErrors({ general: 'Sign in failed. Please try again.' });
+      toast.error('Sign in failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -150,10 +156,18 @@ export default function SignInPage() {
 
               <Button 
                 type="submit" 
-                className="w-full"
+                className={`w-full ${isLoading ? 'opacity-60 cursor-not-allowed' : ''}`}
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                    </svg>
+                    Signing in...
+                  </span>
+                ) : 'Sign in'}
               </Button>
             </form>
 

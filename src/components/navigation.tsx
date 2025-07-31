@@ -29,6 +29,18 @@ export async function Navigation() {
                 >
                   Dashboard
                 </Link>
+                <Link 
+                  href="/account" 
+                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Account
+                </Link>
+                <Link 
+                  href="/organization" 
+                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Organization
+                </Link>
                 <ClientUserMenu email={session.user?.email || ""} />
               </>
             ) : (
