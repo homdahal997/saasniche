@@ -16,7 +16,7 @@ export default function InviteAcceptPage() {
 
   useEffect(() => {
     if (!token) return;
-    fetch(`/api/auth/invite/validate?token=${token}`)
+    fetch(`/api/invite/validate?token=${token}`)
       .then(res => res.json())
       .then(data => {
         if (data.email) {
@@ -36,7 +36,7 @@ export default function InviteAcceptPage() {
     }
     setLoading(true);
     toast.dismiss();
-    const res = await fetch("/api/auth/invite/accept", {
+    const res = await fetch("/api/invite/accept", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, name, password }),
