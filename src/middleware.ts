@@ -32,7 +32,12 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages, but not from protected routes
-  if (session && (pathname.startsWith('/auth/') || pathname === '/')) {
+  // Allow /auth/invite and its subroutes for onboarding invited users
+  if (
+    session &&
+    (pathname.startsWith('/auth/') || pathname === '/') &&
+    !pathname.startsWith('/auth/invite')
+  ) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 

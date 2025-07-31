@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import UserManagement from "./UserManagement";
 
 export default function OrganizationPage() {
   const [org, setOrg] = useState<any>(null);
@@ -43,9 +44,9 @@ export default function OrganizationPage() {
   if (!org) return <div className="max-w-lg mx-auto py-10">Loading...</div>;
 
   return (
-    <div className="max-w-lg mx-auto py-10">
+    <div className="max-w-4xl mx-auto py-10">
       <h2 className="text-2xl font-bold mb-6">Organization Settings</h2>
-      <form onSubmit={handleUpdate} className="bg-white p-6 rounded shadow space-y-4">
+      <form onSubmit={handleUpdate} className="bg-white p-6 rounded shadow space-y-4 max-w-lg">
         <div>
           <label className="block font-medium mb-1">Organization Name</label>
           <input
@@ -64,13 +65,14 @@ export default function OrganizationPage() {
           {loading ? "Saving..." : "Save Changes"}
         </button>
       </form>
-      <div className="mt-8">
+      <div className="mt-8 max-w-lg">
         <h3 className="font-semibold mb-2">Organization Details</h3>
         <div className="bg-gray-50 p-4 rounded">
           <div><span className="font-medium">Name:</span> {org.name}</div>
           <div><span className="font-medium">ID:</span> {org.id}</div>
         </div>
       </div>
+      <UserManagement />
     </div>
   );
 }
