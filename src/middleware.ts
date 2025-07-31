@@ -17,21 +17,22 @@ export async function middleware(request: NextRequest) {
 
   // Public routes that don't require authentication
   const publicRoutes = ['/auth/signin', '/auth/signup', '/', '/pricing', '/about', '/dev-plan']
-  const protectedRoutes = ['/dashboard/ai-content']
+  // Protect all /dashboard routes
+  const isDashboardRoute = pathname.startsWith('/dashboard')
   const isPublicRoute = publicRoutes.includes(pathname)
-  const isProtectedRoute = protectedRoutes.includes(pathname)
+  const isProtectedRoute = isDashboardRoute
 
   const session = await auth()
 
   // Redirect to login if not authenticated and trying to access protected route
-  if (!session && !isPublicRoute && !isProtectedRoute) {
+  if (!session && isProtectedRoute && !isPublicRoute) {
     const redirectUrl = new URL('/auth/signin', request.url)
     redirectUrl.searchParams.set('callbackUrl', request.url)
     return NextResponse.redirect(redirectUrl)
   }
 
   // Redirect authenticated users away from auth pages, but not from protected routes
-  if (session && (pathname.startsWith('/auth/') || pathname === '/') && !isProtectedRoute) {
+  if (session && (pathname.startsWith('/auth/') || pathname === '/')) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 

@@ -1,3 +1,15 @@
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -55,6 +67,7 @@ model User {
   tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   contents      Content[]
   contentUsage  ContentUsage[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([tenantId])
 }

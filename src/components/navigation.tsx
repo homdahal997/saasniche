@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export function Navigation() {
+import { auth } from "@/lib/auth";
+import ClientUserMenu from "./ClientUserMenu";
+import React from "react";
+
+export async function Navigation() {
+  const session = await auth();
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4">
@@ -9,7 +14,6 @@ export function Navigation() {
           <Link href="/" className="font-bold text-xl text-indigo-600">
             SaaS Niche
           </Link>
-          
           <div className="flex items-center space-x-4">
             <Link 
               href="/dev-plan" 
@@ -17,15 +21,21 @@ export function Navigation() {
             >
               Dev Plan
             </Link>
-            <Link 
-              href="/dashboard" 
-              className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Dashboard
-            </Link>
-            <Button asChild size="sm">
-              <Link href="/auth/signin">Sign In</Link>
-            </Button>
+            {session ? (
+              <>
+                <Link 
+                  href="/dashboard" 
+                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Dashboard
+                </Link>
+                <ClientUserMenu email={session.user?.email || ""} />
+              </>
+            ) : (
+              <Button asChild size="sm">
+                <Link href="/auth/signin?callbackUrl=/dashboard">Sign In</Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

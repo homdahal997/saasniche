@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,17 +31,21 @@ export default function SignInPage() {
     }
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For now, just log the data and redirect
-      console.log('Sign in data:', formData);
-      
-      // Redirect to dashboard or dev-plan
-      window.location.href = '/dev-plan';
+      const params = new URLSearchParams(window.location.search);
+      const callbackUrl = params.get('callbackUrl') || '/dashboard';
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+        callbackUrl,
+      });
+      if (result?.error) {
+        setErrors({ general: 'Invalid email or password. Please try again.' });
+      } else if (result?.url) {
+        window.location.href = result.url;
+      }
     } catch (error) {
-      console.error('Sign in error:', error);
-      setErrors({ general: 'Invalid email or password. Please try again.' });
+      setErrors({ general: 'Sign in failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
