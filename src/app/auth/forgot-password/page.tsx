@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -37,13 +39,14 @@ export default function ForgotPasswordPage() {
         <h2 className="text-2xl font-bold text-center mb-6">Forgot Password</h2>
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-4">
           <div>
-            <label className="block font-medium mb-1">Email address</label>
-            <input
+            <Label htmlFor="email">Email address</Label>
+            <Input
               type="email"
-              className="w-full border rounded px-3 py-2"
+              id="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
+              placeholder="Enter your email"
             />
           </div>
           <button

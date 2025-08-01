@@ -7,6 +7,10 @@ export async function POST(req: Request) {
   if (!session?.user?.tenantId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  // Only allow admins to update organization name
+  if (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER') {
+    return NextResponse.json({ error: "Only admins can update organization name" }, { status: 403 });
+  }
   const { name } = await req.json();
   try {
     await prisma.tenant.update({

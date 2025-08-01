@@ -24,13 +24,14 @@ export async function POST(req: Request) {
     data: { name: organization, industry: 'OTHER' }
   });
 
-  // Create user with tenantId
+  // First user for this tenant is ADMIN
   const user = await prisma.user.create({
     data: {
       name,
       email,
       password: hashedPassword,
-      tenantId: tenant.id
+      tenantId: tenant.id,
+      role: 'ADMIN',
     }
   });
 

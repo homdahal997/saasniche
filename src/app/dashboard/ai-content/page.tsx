@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function AIContentPage() {
     const [prompt, setPrompt] = useState("");
@@ -63,13 +64,10 @@ export default function AIContentPage() {
                                 placeholder="e.g. You are a helpful assistant."
                             />
                         </div>
-                        <Button type="submit" disabled={loading} className="w-full">
-                            {loading ? "Generating..." : "Generate Content"}
-                        </Button>
                     </form>
-                    {error && <div className="mt-4 text-red-600">{error}</div>}
+                    {error && <div className="mt-4 text-red-600 animate-pulse">{error}</div>}
                     {result && (
-                        <div className="mt-6">
+                        <div className="mt-6 animate-fade-in">
                             <label className="block text-sm font-medium text-gray-700 mb-2">Generated Content</label>
                             <div className="bg-white border rounded-md p-4 whitespace-pre-line text-gray-900">
                                 {result}
@@ -77,6 +75,14 @@ export default function AIContentPage() {
                         </div>
                     )}
                 </CardContent>
+                <CardFooter className="flex flex-col gap-2">
+                    <Badge variant="secondary" className="w-full text-center">AI Content is generated securely and privately</Badge>
+                    <div className="w-full flex justify-end">
+                        <Button type="submit" disabled={loading} className="w-full transition-transform duration-150 hover:scale-[1.02]">
+                            {loading ? "Generating..." : "Generate Content"}
+                        </Button>
+                    </div>
+                </CardFooter>
             </Card>
         </div>
     );

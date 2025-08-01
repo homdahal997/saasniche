@@ -2,11 +2,19 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import UserManagement from "./UserManagement";
+import { useUserRole } from "./useUserRole";
+import AdminUserTable from "./AdminUserTable";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default function OrganizationPage() {
   const [org, setOrg] = useState<any>(null);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const role = useUserRole();
 
   useEffect(() => {
     // Fetch current organization info
@@ -41,38 +49,61 @@ export default function OrganizationPage() {
     setLoading(false);
   };
 
-  if (!org) return <div className="max-w-lg mx-auto py-10">Loading...</div>;
+  if (!org || !role) return <div className="max-w-lg mx-auto py-10">Loading...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto py-10">
-      <h2 className="text-2xl font-bold mb-6">Organization Settings</h2>
-      <form onSubmit={handleUpdate} className="bg-white p-6 rounded shadow space-y-4 max-w-lg">
-        <div>
-          <label className="block font-medium mb-1">Organization Name</label>
-          <input
-            type="text"
-            className="w-full border rounded px-3 py-2"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-          disabled={loading}
-        >
-          {loading ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
-      <div className="mt-8 max-w-lg">
-        <h3 className="font-semibold mb-2">Organization Details</h3>
-        <div className="bg-gray-50 p-4 rounded">
-          <div><span className="font-medium">Name:</span> {org.name}</div>
-          <div><span className="font-medium">ID:</span> {org.id}</div>
-        </div>
+    <div className="max-w-5xl mx-auto py-10 space-y-8">
+      <h2 className="text-3xl font-bold mb-8 text-center">Organization Settings</h2>
+      <div className="grid md:grid-cols-2 gap-8">
+        <Card className="shadow-lg">
+          <CardHeader>
+            <CardTitle>Organization Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {(role === "ADMIN" || role === "OWNER") && (
+              <form onSubmit={handleUpdate} className="space-y-4">
+                <div>
+                  <Label htmlFor="org-name">Organization Name</Label>
+                  <Input
+                    id="org-name"
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                <CardFooter className="p-0 mt-4">
+                  <Button
+                    type="submit"
+                    className="w-full transition-transform duration-150 hover:scale-[1.02]"
+                    disabled={loading}
+                  >
+                    {loading ? "Saving..." : "Save Changes"}
+                  </Button>
+                </CardFooter>
+              </form>
+            )}
+          </CardContent>
+        </Card>
+        <Card className="shadow-lg">
+          <CardHeader>
+            <CardTitle>Organization Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div>
+                <Badge variant="secondary" className="mb-2">Active</Badge>
+              </div>
+              <div><span className="font-medium">Name:</span> {org.name}</div>
+              <div><span className="font-medium">ID:</span> {org.id}</div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-      <UserManagement />
+      <div className="grid md:grid-cols-2 gap-8">
+        {(role === "ADMIN" || role === "OWNER") && <UserManagement />}
+        {(role === "ADMIN" || role === "OWNER") && <AdminUserTable />}
+      </div>
     </div>
   );
 }

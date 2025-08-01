@@ -2,7 +2,10 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+import { useUserRole } from "./useUserRole";
+
 export default function UserManagement() {
+  const role = useUserRole();
   const [inviteEmail, setInviteEmail] = useState("");
   const [addUser, setAddUser] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -55,8 +58,10 @@ export default function UserManagement() {
     setLoading(false);
   };
 
+  if (role !== "ADMIN" && role !== "OWNER") return null;
   return (
     <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* ...existing code for forms... */}
       <form onSubmit={handleInvite} className="bg-white p-6 rounded shadow space-y-4">
         <h3 className="font-semibold mb-2">Invite User</h3>
         <input

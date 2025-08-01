@@ -9,6 +9,10 @@ export async function POST(req: Request) {
   if (!session?.user?.tenantId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  // Only allow admins to invite users
+  if (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER') {
+    return NextResponse.json({ error: "Only admins can invite users" }, { status: 403 });
+  }
   const { email } = await req.json();
   if (!email) {
     return NextResponse.json({ error: "Email required" }, { status: 400 });

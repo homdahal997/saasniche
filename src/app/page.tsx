@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col justify-center">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
@@ -27,24 +30,51 @@ export default function Home() {
         </div>
 
         <div className="mt-20 grid md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4">Multi-Tenant Architecture</h3>
-            <p className="text-gray-600">
-              Complete data isolation for each organization with secure tenant-based access control.
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4">Industry-Specific Templates</h3>
-            <p className="text-gray-600">
-              Pre-built templates for marketing, legal, healthcare, finance, and more industries.
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4">AI-Powered Generation</h3>
-            <p className="text-gray-600">
-              Leverage GPT-4 to create high-quality, context-aware content for your business.
-            </p>
-          </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <Avatar>
+                <AvatarImage src="/avatars/tenant.png" alt="Tenant" />
+                <AvatarFallback>MT</AvatarFallback>
+              </Avatar>
+              <CardTitle>Multi-Tenant Architecture</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-2">
+                Complete data isolation for each organization with secure tenant-based access control.
+              </p>
+              <Badge variant="secondary">Enterprise</Badge>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <Avatar>
+                <AvatarImage src="/avatars/template.png" alt="Templates" />
+                <AvatarFallback>IT</AvatarFallback>
+              </Avatar>
+              <CardTitle>Industry-Specific Templates</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-2">
+                Pre-built templates for marketing, legal, healthcare, finance, and more industries.
+              </p>
+              <Badge variant="outline">Templates</Badge>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <Avatar>
+                <AvatarImage src="/avatars/ai.png" alt="AI" />
+                <AvatarFallback>AI</AvatarFallback>
+              </Avatar>
+              <CardTitle>AI-Powered Generation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-2">
+                Leverage GPT-4 to create high-quality, context-aware content for your business.
+              </p>
+              <Badge>Powered by GPT-4</Badge>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

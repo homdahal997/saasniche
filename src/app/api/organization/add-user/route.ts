@@ -8,6 +8,10 @@ export async function POST(req: Request) {
   if (!session?.user?.tenantId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  // Only allow admins to add users
+  if (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER') {
+    return NextResponse.json({ error: "Only admins can add users" }, { status: 403 });
+  }
   const { name, email, password } = await req.json();
   if (!name || !email || !password) {
     return NextResponse.json({ error: "All fields required" }, { status: 400 });
