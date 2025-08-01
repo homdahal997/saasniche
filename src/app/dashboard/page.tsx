@@ -1,5 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import DashboardClient from "./DashboardClient";
+import ContentSummary from "./ContentSummary";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -15,44 +17,17 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600">Welcome back, {session.user?.name}!</p>
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Total Content</h3>
-            <p className="text-3xl font-bold text-indigo-600">0</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">This Month</h3>
-            <p className="text-3xl font-bold text-green-600">0</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Tokens Used</h3>
-            <p className="text-3xl font-bold text-orange-600">0</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Templates</h3>
-            <p className="text-3xl font-bold text-purple-600">0</p>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Recent Content</h2>
-            <p className="text-gray-500">No content generated yet.</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-            <div className="space-y-3">
-              <button className="w-full text-left p-3 rounded border border-gray-200 hover:bg-gray-50">
-                Generate Marketing Copy
+        <ContentSummary />
+        <div className="grid lg:grid-cols-3 gap-8">
+          <DashboardClient />
+          <div className="bg-gradient-to-br from-indigo-100 to-indigo-300 p-6 rounded-lg shadow flex flex-col items-center justify-center">
+            <h2 className="text-xl font-semibold mb-4 text-indigo-900">AI Content Generator</h2>
+            <p className="text-gray-700 mb-4 text-center">Generate high-quality content for your business using AI. Click below to get started!</p>
+            <a href="/dashboard/ai-content">
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition-transform duration-150 hover:scale-105 shadow-lg">
+                Go to AI Content Generator
               </button>
-              <button className="w-full text-left p-3 rounded border border-gray-200 hover:bg-gray-50">
-                Create Legal Template
-              </button>
-              <button className="w-full text-left p-3 rounded border border-gray-200 hover:bg-gray-50">
-                Write Technical Documentation
-              </button>
-            </div>
+            </a>
           </div>
         </div>
       </div>
