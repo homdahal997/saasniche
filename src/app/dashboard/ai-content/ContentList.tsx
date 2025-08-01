@@ -1,8 +1,11 @@
 
+
 "use client";
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 
 interface ContentItem {
   id: string;
@@ -28,6 +31,28 @@ export default function ContentList() {
   const [totalPages, setTotalPages] = useState(1);
   const [viewItem, setViewItem] = useState<ContentItem | null>(null);
   const limit = 10;
+
+  // TipTap editor instance (client-only, top-level)
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: '',
+    onUpdate: ({ editor }) => {
+      setEditContent(editor.getHTML());
+    },
+    editable: !!editId,
+    immediatelyRender: false,
+  });
+
+  // Sync editor content when editId or editContent changes
+  useEffect(() => {
+    if (editor && editId) {
+      editor.commands.setContent(editContent || '');
+      editor.setEditable(true);
+    } else if (editor) {
+      editor.commands.setContent('');
+      editor.setEditable(false);
+    }
+  }, [editId, editContent, editor]);
 
   const fetchContents = async (params = {}) => {
     setLoading(true);
@@ -213,15 +238,14 @@ export default function ContentList() {
               </div>
               <div className="whitespace-pre-line text-gray-900">
                 {editId === item.id ? (
-                  <textarea
-                    className="w-full border rounded px-2 py-1 mt-1"
-                    rows={4}
-                    value={editContent}
-                    onChange={e => setEditContent(e.target.value)}
-                    disabled={saving}
-                  />
+                  <div className="w-full border rounded px-2 py-1 mt-1 bg-white">
+                    <EditorContent editor={editor} />
+                  </div>
                 ) : (
-                  item.generatedContent
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: item.generatedContent }}
+                  />
                 )}
               </div>
             </div>

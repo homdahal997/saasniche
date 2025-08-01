@@ -10,10 +10,7 @@ export async function Navigation() {
   return (
     <nav className="border-b bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="font-bold text-xl text-indigo-600">
-            SaaS Niche
-          </Link>
+        <div className="flex items-center justify-end h-16">
           <div className="flex items-center space-x-4">
             <Link 
               href="/dev-plan" 
